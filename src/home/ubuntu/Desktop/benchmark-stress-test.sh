@@ -9,8 +9,9 @@
 # ====== USER CONFIGURATION ======
 # Define Network Interface and Target IP pairs (Format: "NIC,TargetIP")
 NIC_IP_PAIRS=(
-  "eth0,8.8.8.8"
+  # "eth0,8.8.8.8"
   # "eth1,1.1.1.1"
+  "8.8.8.8"
 )
 
 # Test Targets: Can be mount points (directories) or raw devices (block devices)
@@ -89,6 +90,22 @@ check_install_tool() {
             yum install -y -q "$tool" >/dev/null 2>&1
         fi
     fi
+}
+
+# Detect a valid network interface for a given IP
+detect_connectivity_nic() {
+    local target_ip="$1"
+    local nic=""
+
+    # 1. Try to find the interface used by the route to the target IP
+    nic=$(ip route get "$target_ip" 2>/dev/null | grep -oP 'dev \K\S+')
+
+    # 2. Fallback: If no specific route, find the first UP interface that is not 'lo'
+    if [[ -z "$nic" ]] || [[ "$nic" == "lo" ]]; then
+        nic=$(ip -o link show | awk -F': ' '$3 ~ /UP/ && $2 != "lo" {print $2; exit}')
+    fi
+
+    echo "$nic"
 }
 
 # Cleanup and Exit Handling
@@ -172,8 +189,18 @@ fi
 # ====== 1. NETWORK TEST ======
 echo "[1/3] Running Network Latency Benchmarks..."
 for pair in "${NIC_IP_PAIRS[@]}"; do
-  nic="${pair%,*}"
-  ip="${pair#*,}"
+  if [[ "$pair" == *","* ]]; then
+      nic="${pair%,*}"
+      ip="${pair#*,}"
+  else
+      ip="$pair"
+      nic=$(detect_connectivity_nic "$ip")
+      if [[ -z "$nic" ]]; then
+          echo "   -> No suitable interface found for $ip. Skipping."
+          NET_RESULTS+=("? -> $ip: Skipped (No interface detected)")
+          continue
+      fi
+  fi
   
   if ! ip link show "$nic" >/dev/null 2>&1; then
       echo "   -> Interface $nic not found. Skipping."
