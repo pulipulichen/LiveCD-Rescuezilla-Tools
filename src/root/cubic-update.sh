@@ -5,7 +5,7 @@
 # Description: Downloads Proxmox VE benchmark tools to specific paths.
 # Target OS: Ubuntu 24.04
 # Author: Bash Master
-# sudo curl -L https://github.com/pulipulichen/Proxmox-VE-Tools/raw/refs/heads/main/benchmark/cubic-update.sh -o /root/cubic-update.sh && sudo chmod +x /root/cubic-update.sh
+# sudo curl -L https://github.com/pulipulichen/LiveCD-Rescuezilla-Tools/raw/refs/heads/main/src/root/cubic-update.sh -o /root/cubic-update.sh && sudo chmod +x /root/cubic-update.sh
 # =================================================================
 
 # Ensure the script is running with root privileges
@@ -24,15 +24,15 @@ mkdir -p "$ROOT_DIR"
 
 # List of files for the Desktop directory
 DESKTOP_FILES=(
-    "https://github.com/pulipulichen/Proxmox-VE-Tools/raw/refs/heads/main/benchmark/benchmark-stress-test.sh"
-    "https://github.com/pulipulichen/Proxmox-VE-Tools/raw/refs/heads/main/benchmark/burnin.sh"
-    "https://github.com/pulipulichen/Proxmox-VE-Tools/raw/refs/heads/main/benchmark/fio-example.sh"
-    "https://github.com/pulipulichen/Proxmox-VE-Tools/raw/refs/heads/main/benchmark/fio.sh"
+    "https://github.com/pulipulichen/LiveCD-Rescuezilla-Tools/raw/refs/heads/main/src/home/ubuntu/Desktop/benchmark-stress-test.sh"
+    "https://github.com/pulipulichen/LiveCD-Rescuezilla-Tools/raw/refs/heads/main/src/home/ubuntu/Desktop/burnin.sh"
+    "https://github.com/pulipulichen/LiveCD-Rescuezilla-Tools/raw/refs/heads/main/src/home/ubuntu/Desktop/fio-example.sh"
+    "https://github.com/pulipulichen/LiveCD-Rescuezilla-Tools/raw/refs/heads/main/src/home/ubuntu/Desktop/fio.sh"
 )
 
 # List of files for the Root directory
 ROOT_FILES=(
-    "https://github.com/pulipulichen/Proxmox-VE-Tools/raw/refs/heads/main/benchmark/cubic-update.sh"
+    "https://github.com/pulipulichen/LiveCD-Rescuezilla-Tools/raw/refs/heads/main/src/root/cubic-update.sh"
 )
 
 echo "Starting download process..."

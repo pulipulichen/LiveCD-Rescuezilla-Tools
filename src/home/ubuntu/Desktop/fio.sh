@@ -31,7 +31,7 @@ echo "System disk detected: /dev/$ROOT_DISK (will be excluded from testing)"
 
 # 2. Detect all physical disks (Type: disk) and exclude the system disk
 # Use lsblk to get paths, filtering out loop devices and the system disk
-mapfile -t DISK_LIST < <(lsblk -dpno NAME,TYPE | grep 'disk' | awk '{print $1}' | grep -v "$ROOT_DISK")
+mapfile -t DISK_LIST < <(lsblk -dpno NAME,TYPE,RO | awk '$2=="disk" && $3=="0" && ($1 ~ /\/dev\/(sd[a-z]|vd[a-z]|nvme[0-9]+n[0-9]+)/) {print $1}' | grep -v "$ROOT_DISK")
 
 # Check if any usable disks were found
 if [ ${#DISK_LIST[@]} -eq 0 ]; then

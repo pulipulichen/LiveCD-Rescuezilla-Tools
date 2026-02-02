@@ -132,7 +132,7 @@ echo
 # Auto-detect Disk Devices if none specified
 if [ ${#TEST_TARGETS[@]} -eq 0 ]; then
     echo "[Detecting] No targets specified. Scanning for physical disks..."
-    mapfile -t DETECTED_DISKS < <(lsblk -dpno NAME,TYPE,RO | awk '$2=="disk" && $3=="0" {print $1}')
+    mapfile -t DETECTED_DISKS < <(lsblk -dpno NAME,TYPE,RO | awk '$2=="disk" && $3=="0" && ($1 ~ /\/dev\/(sd[a-z]|vd[a-z]|nvme[0-9]+n[0-9]+)/) {print $1}')
     if [ ${#DETECTED_DISKS[@]} -gt 0 ]; then
         TEST_TARGETS=("${DETECTED_DISKS[@]}")
         echo "      Detected: ${TEST_TARGETS[*]}"
